@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard - IT Documentation Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="dashboard">
+      <div class="header">
+        <h1>User Dashboard</h1>
+        <div class="user-info">
+          <span id="userName"></span>
+          <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search documents by title or category...">
+      </div>
+
+      <h2>Available Documents</h2>
+      <div id="documentsList"></div>
+    </div>
+  </div>
+
+  <!-- View Document Modal -->
+  <div id="viewModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Document Details</h2>
+        <span class="close" onclick="closeViewModal()">&times;</span>
+      </div>
+      <div id="documentDetails"></div>
+      <button class="btn" id="downloadBtn" style="margin-top: 20px;">Download</button>
+    </div>
+  </div>
+
+  <script src="js/user.js"></script>
+</body>
+</html>
