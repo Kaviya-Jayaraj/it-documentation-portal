@@ -10,9 +10,12 @@
   <div class="container">
     <div class="dashboard">
       <div class="header">
-        <h1>User Dashboard</h1>
+        <div>
+          <h1>User Dashboard</h1>
+          <p style="color: #666; margin-top: 5px; font-size: 14px;">Browse and download documents</p>
+        </div>
         <div class="user-info">
-          <span id="userName"></span>
+          <span id="userName" style="color: #1e3c72; font-weight: 600;"></span>
           <button class="btn btn-secondary" onclick="logout()">Logout</button>
         </div>
       </div>
@@ -21,7 +24,7 @@
         <input type="text" id="searchInput" placeholder="Search documents by title or category...">
       </div>
 
-      <h2>Available Documents</h2>
+      <h2 style="color: #1e3c72; margin-bottom: 20px; font-size: 24px;">Available Documents</h2>
       <div id="documentsList"></div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:3002/api';
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
 
@@ -36,43 +36,57 @@ function displayDocuments(documents) {
       <h3>${doc.title}</h3>
       <p><strong>Category:</strong> <span class="badge">${doc.category}</span></p>
       <p><strong>Description:</strong> ${doc.description}</p>
-      <p><strong>Uploaded by:</strong> ${doc.uploadedBy.name}</p>
+      <p><strong>Uploaded by:</strong> ${doc.uploadedBy ? doc.uploadedBy.name : 'Unknown'}</p>
       <p><strong>Date:</strong> ${new Date(doc.createdAt).toLocaleDateString()}</p>
       <div class="actions">
-        <button class="btn btn-small" onclick="viewDocument('${doc._id}')">View Details</button>
+        <button class="btn btn-small" onclick="viewDocument('${doc._id}')">View Document</button>
         <button class="btn btn-small btn-secondary" onclick="downloadDocument('${doc._id}')">Download</button>
       </div>
     </div>
   `).join('');
 }
 
-async function viewDocument(id) {
+async function downloadDocument(id) {
   try {
-    const response = await fetch(`${API_URL}/documents/${id}`, { headers });
-    const data = await response.json();
+    const response = await fetch(`${API_URL}/documents/${id}/download`, { 
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     
-    const details = document.getElementById('documentDetails');
-    details.innerHTML = `
-      <h3>${data.document.title}</h3>
-      <p><strong>Category:</strong> ${data.document.category}</p>
-      <p><strong>Description:</strong> ${data.document.description}</p>
-      <p><strong>Uploaded by:</strong> ${data.document.uploadedBy.name}</p>
-      <p><strong>Date:</strong> ${new Date(data.document.createdAt).toLocaleString()}</p>
-    `;
-    
-    document.getElementById('downloadBtn').onclick = () => downloadDocument(id);
-    document.getElementById('viewModal').classList.add('active');
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'document';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } else {
+      alert('Download failed');
+    }
   } catch (error) {
-    alert('Error loading document details');
+    alert('Download error');
   }
 }
 
-function closeViewModal() {
-  document.getElementById('viewModal').classList.remove('active');
-}
-
-async function downloadDocument(id) {
-  window.open(`${API_URL}/documents/${id}/download?token=${token}`, '_blank');
+async function viewDocument(id) {
+  // Same as download but open in new tab
+  try {
+    const response = await fetch(`${API_URL}/documents/${id}/download`, { 
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } else {
+      alert('View failed');
+    }
+  } catch (error) {
+    alert('View error');
+  }
 }
 
 document.getElementById('searchInput').addEventListener('input', async (e) => {

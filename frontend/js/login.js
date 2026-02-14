@@ -1,5 +1,6 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:3002/api';
 
+// Regular Email/Password Login
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   
@@ -27,8 +28,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
       }
     } else {
       errorDiv.textContent = data.message || 'Login failed';
+      errorDiv.style.color = '#e74c3c';
     }
   } catch (error) {
     errorDiv.textContent = 'Connection error. Please try again.';
+    errorDiv.style.color = '#e74c3c';
   }
 });

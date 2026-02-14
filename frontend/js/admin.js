@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:3002/api';
 let token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user'));
 
@@ -36,7 +36,7 @@ function displayDocuments(documents) {
       <h3>${doc.title}</h3>
       <p><strong>Category:</strong> <span class="badge">${doc.category}</span></p>
       <p><strong>Description:</strong> ${doc.description}</p>
-      <p><strong>Uploaded by:</strong> ${doc.uploadedBy.name}</p>
+      <p><strong>Uploaded by:</strong> ${doc.uploadedBy ? doc.uploadedBy.name : 'Unknown'}</p>
       <p><strong>Date:</strong> ${new Date(doc.createdAt).toLocaleDateString()}</p>
       <div class="actions">
         <button class="btn btn-small btn-secondary" onclick="openEditModal('${doc._id}', '${doc.title}', '${doc.description}', '${doc.category}')">Edit</button>
@@ -45,45 +45,6 @@ function displayDocuments(documents) {
       </div>
     </div>
   `).join('');
-}
-
-async function loadUsers() {
-  try {
-    const response = await fetch(`${API_URL}/users`, { headers });
-    const data = await response.json();
-    displayUsers(data.users);
-  } catch (error) {
-    console.error('Error loading users:', error);
-  }
-}
-
-function displayUsers(users) {
-  const list = document.getElementById('usersList');
-  
-  list.innerHTML = `
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${users.map(u => `
-          <tr>
-            <td>${u.name}</td>
-            <td>${u.email}</td>
-            <td>${u.role}</td>
-            <td>
-              ${u._id !== user.id ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u._id}')">Delete</button>` : ''}
-            </td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-  `;
 }
 
 document.getElementById('uploadForm').addEventListener('submit', async (e) => {
@@ -145,37 +106,6 @@ document.getElementById('editForm').addEventListener('submit', async (e) => {
   }
 });
 
-document.getElementById('userForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const body = {
-    name: document.getElementById('userName').value,
-    email: document.getElementById('userEmail').value,
-    password: document.getElementById('userPassword').value,
-    role: document.getElementById('userRole').value
-  };
-  
-  try {
-    const response = await fetch(`${API_URL}/users`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body)
-    });
-    
-    const data = await response.json();
-    
-    if (response.ok) {
-      closeUserModal();
-      loadUsers();
-      e.target.reset();
-    } else {
-      document.getElementById('userError').textContent = data.message;
-    }
-  } catch (error) {
-    document.getElementById('userError').textContent = 'User creation failed';
-  }
-});
-
 async function deleteDocument(id) {
   if (!confirm('Are you sure you want to delete this document?')) return;
   
@@ -190,22 +120,28 @@ async function deleteDocument(id) {
   }
 }
 
-async function deleteUser(id) {
-  if (!confirm('Are you sure you want to delete this user?')) return;
-  
-  try {
-    await fetch(`${API_URL}/users/${id}`, {
-      method: 'DELETE',
-      headers
-    });
-    loadUsers();
-  } catch (error) {
-    alert('Delete failed');
-  }
-}
-
 async function downloadDocument(id) {
-  window.open(`${API_URL}/documents/${id}/download?token=${token}`, '_blank');
+  try {
+    const response = await fetch(`${API_URL}/documents/${id}/download`, { 
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'document';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } else {
+      alert('Download failed');
+    }
+  } catch (error) {
+    alert('Download error');
+  }
 }
 
 document.getElementById('searchInput').addEventListener('input', async (e) => {
@@ -246,19 +182,9 @@ function closeEditModal() {
   document.getElementById('editError').textContent = '';
 }
 
-function openUserModal() {
-  document.getElementById('userModal').classList.add('active');
-}
-
-function closeUserModal() {
-  document.getElementById('userModal').classList.remove('active');
-  document.getElementById('userError').textContent = '';
-}
-
 function logout() {
   localStorage.clear();
   window.location.href = 'login.html';
 }
 
 loadDocuments();
-loadUsers();
