@@ -316,3 +316,24 @@ This is an academic project for educational purposes.
 ## Support
 
 For issues or questions, please refer to the documentation or contact your instructor.
+
+# IT Documentation Portal
+
+## Tech Stack
+- Frontend: HTML, CSS, JavaScript
+- Backend: Node.js, Express
+- Database: MongoDB
+
+## Features
+- User document upload
+- Admin verification (approve/reject)
+- Document management system
+
+## Installation
+cd backend
+npm install
+npm start
+
+## Folder Structure
+/backend
+/frontend
