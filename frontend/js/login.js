@@ -1,4 +1,19 @@
-const API_URL = 'http://localhost:3002/api';
+const API_URL = 'http://localhost:5000/api';
+
+// Password visibility toggle
+function togglePassword() {
+  const passwordInput = document.getElementById('password');
+  const eyeIcon = document.getElementById('eyeIcon');
+  
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    eyeIcon.setAttribute('data-feather', 'eye');
+  } else {
+    passwordInput.type = 'password';
+    eyeIcon.setAttribute('data-feather', 'eye-off');
+  }
+  feather.replace();
+}
 
 // Regular Email/Password Login
 document.getElementById('loginForm').addEventListener('submit', async (e) => {

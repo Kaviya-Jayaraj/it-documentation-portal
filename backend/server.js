@@ -9,7 +9,7 @@ const app = express();
 
 connectDB();
 
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:8080'], credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));

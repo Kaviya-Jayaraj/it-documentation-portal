@@ -1,13 +1,54 @@
-# IT Documentation Portal
+# IT Documentation Portal - Phase 2
 
-A full-stack web application for managing IT documentation with role-based access control.
+A full-stack web application for managing IT documentation with advanced features including Google OAuth, document versioning, and enhanced security.
 
 ## Tech Stack
 
 - **Frontend:** HTML, CSS, JavaScript
 - **Backend:** Node.js with Express
 - **Database:** MongoDB
-- **Authentication:** JWT with bcrypt password hashing
+- **Authentication:** JWT with bcrypt password hashing + Google OAuth
+- **Email:** Nodemailer
+- **Security:** Helmet, Rate Limiting, Account Locking
+
+## Phase 2 New Features
+
+### 🔐 Enhanced Authentication
+- Google OAuth 2.0 integration
+- Account locking after failed login attempts
+- Session management
+- Enhanced security headers
+
+### 📄 Document Management 2.0
+- Document versioning system
+- Advanced search with tags and categories
+- File metadata tracking
+- Download count analytics
+- Soft delete functionality
+
+### 🔍 Advanced Search & Filtering
+- Search by title, description, category, and tags
+- Filter by categories and tags
+- Pagination support
+- Sorting options
+
+### 📊 Activity Logging & Analytics
+- Comprehensive activity tracking
+- User action logs
+- IP address and user agent logging
+- Admin activity dashboard
+
+### 📧 Email Notifications
+- Welcome emails for new users
+- Document upload notifications
+- Configurable SMTP settings
+
+### 🛡️ Enhanced Security
+- Rate limiting on API endpoints
+- Helmet.js security headers
+- Input validation
+- CORS configuration
+- Account lockout protection
 
 ## Features
 
