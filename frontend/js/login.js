@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://it-documentation-portal.up.railway.app/api';
 
 // Password visibility toggle
 function togglePassword() {
